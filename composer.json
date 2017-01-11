@@ -1,0 +1,44 @@
+{
+    "name": "zelenin/http-client",
+    "description": "PSR-7 compatible HTTP client with middleware support",
+    "keywords": [
+        "psr-7",
+        "http",
+        "client"
+    ],
+    "homepage": "https://github.com/zelenin/http-client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandr Zelenin",
+            "email": "aleksandr@zelenin.me",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/zelenin/http-client/issues",
+        "source": "https://github.com/zelenin/http-client"
+    },
+    "require": {
+        "php": ">=7.0",
+        "psr/http-message": "~1.0.0",
+        "dflydev/fig-cookies": "~1.0.2",
+        "zendframework/zend-diactoros": "~1.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zelenin\\HttpClient\\": "src"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zelenin\\HttpClient\\Test\\": "tests"
+        }
+    }
+}
