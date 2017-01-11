@@ -4,7 +4,8 @@
     "keywords": [
         "psr-7",
         "http",
-        "client"
+        "client",
+        "middleware"
     ],
     "homepage": "https://github.com/zelenin/http-client",
     "license": "MIT",
