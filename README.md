@@ -26,10 +26,11 @@ to the ```require``` section of your ```composer.json```
 
 ```php
 use Zelenin\HttpClient\ClientFactory;
+use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-$client = (new ClientFactory())->createCurlClient();
+$client = (new ClientFactory(new DiactorosPsr7Factory()))->createCurlClient();
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
@@ -45,6 +46,7 @@ use Zelenin\HttpClient\Middleware\Deflate;
 use Zelenin\HttpClient\Middleware\UserAgent;
 use Zelenin\HttpClient\MiddlewareClient;
 use Zelenin\HttpClient\MiddlewareStack;
+use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
@@ -54,18 +56,20 @@ $requestConfig = new RequestConfig();
 
 $cookieStorage = new FileStorage('/tmp/http-client/cookies.storage');
 
+$psr7Factory = new DiactorosPsr7Factory();
+
 /**
  * Middlewares order is important.
  */
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
     new UserAgent(sprintf('HttpClient/0.0.1 PHP/%s', PHP_VERSION)), // pre-request middleware
-    new CurlTransport($requestConfig), // request middleware
-    new Deflate(), // post-request middleware
+    new CurlTransport($requestConfig, $psr7Factory), // request middleware
+    new Deflate(),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 
-$client = new MiddlewareClient($middlewareStack);
+$client = new MiddlewareClient($middlewareStack, $psr7Factory);
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);

@@ -7,8 +7,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Exception\ConnectException;
 use Zelenin\HttpClient\Middleware;
+use Zelenin\HttpClient\Psr7\Psr7Factory;
 use Zelenin\HttpClient\RequestConfig;
-use Zend\Diactoros\Response;
 use function Zelenin\HttpClient\copyResourceToStream;
 use function Zelenin\HttpClient\deserializeHeadersToPsr7Format;
 use function Zelenin\HttpClient\serializeHeadersFromPsr7Format;
@@ -21,11 +21,17 @@ final class CurlTransport implements Transport, Middleware
     private $requestConfig;
 
     /**
+     * @var Psr7Factory
+     */
+    private $factory;
+
+    /**
      * @param RequestConfig $requestConfig
      */
-    public function __construct(RequestConfig $requestConfig)
+    public function __construct(RequestConfig $requestConfig, Psr7Factory $factory)
     {
         $this->requestConfig = $requestConfig;
+        $this->factory = $factory;
     }
 
     /**
@@ -86,7 +92,7 @@ final class CurlTransport implements Transport, Middleware
 
         curl_exec($curlResource);
 
-        $stream = copyResourceToStream($resource);
+        $stream = copyResourceToStream($resource, $this->factory);
         fclose($resource);
 
         $errorNumber = curl_errno($curlResource);
@@ -102,7 +108,8 @@ final class CurlTransport implements Transport, Middleware
 
         curl_close($curlResource);
 
-        $response = (new Response($stream, $status, deserializeHeadersToPsr7Format($headers)))
+        $response = $this->factory
+            ->createResponse($stream, $status, deserializeHeadersToPsr7Format($headers))
             ->withProtocolVersion($version);
 
         return $response;

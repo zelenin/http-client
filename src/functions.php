@@ -5,7 +5,7 @@ namespace Zelenin\HttpClient;
 
 use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
-use Zend\Diactoros\Stream;
+use Zelenin\HttpClient\Psr7\Psr7Factory;
 
 /**
  * @param array $headers
@@ -76,11 +76,12 @@ function copyStreamToResource(StreamInterface $stream)
 }
 
 /**
- * @param resource $resource
+ * @param $resource
+ * @param Psr7Factory $factory
  *
  * @return StreamInterface
  */
-function copyResourceToStream($resource): StreamInterface
+function copyResourceToStream($resource, Psr7Factory $factory): StreamInterface
 {
     if (!is_resource($resource)) {
         throw new InvalidArgumentException('Not resource.');
@@ -90,7 +91,7 @@ function copyResourceToStream($resource): StreamInterface
 
     stream_copy_to_stream($resource, $tempResource);
 
-    $stream = new Stream($tempResource, 'wb+');
+    $stream = $factory->createStream($tempResource);
     $stream->rewind();
 
     return $stream;
@@ -101,7 +102,7 @@ function copyResourceToStream($resource): StreamInterface
  *
  * @return StreamInterface
  */
-function inflateStream(StreamInterface $stream): StreamInterface
+function inflateStream(StreamInterface $stream, Psr7Factory $factory): StreamInterface
 {
     $stream->rewind();
 
@@ -116,5 +117,5 @@ function inflateStream(StreamInterface $stream): StreamInterface
 
     stream_filter_append($resource, "zlib.inflate", STREAM_FILTER_READ);
 
-    return copyResourceToStream($resource);
+    return copyResourceToStream($resource, $factory);
 }
