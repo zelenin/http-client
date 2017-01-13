@@ -11,13 +11,13 @@ The preferred way to install this extension is through [Composer](http://getcomp
 Either run
 
 ```
-php composer.phar require zelenin/http-client "~0.0.1"
+php composer.phar require zelenin/http-client "~0.0.5"
 ```
 
 or add
 
 ```
-"zelenin/http-client": "~0.0.1"
+"zelenin/http-client": "~0.0.5"
 ```
 
 to the ```require``` section of your ```composer.json```
