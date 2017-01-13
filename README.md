@@ -52,20 +52,14 @@ use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-$requestConfig = new RequestConfig();
-
 $cookieStorage = new FileStorage('/tmp/http-client/cookies.storage');
-
 $psr7Factory = new DiactorosPsr7Factory();
 
-/**
- * Middlewares order is important.
- */
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
-    new UserAgent(sprintf('HttpClient/0.0.1 PHP/%s', PHP_VERSION)), // pre-request middleware
-    new CurlTransport($requestConfig, $psr7Factory), // request middleware
-    new Deflate(),  // post-request middleware
+    new UserAgent(sprintf('HttpClient/0.0.5 PHP/%s', PHP_VERSION)), // pre-request middleware
+    new CurlTransport(new RequestConfig(), $psr7Factory), // request middleware
+    new Deflate($psr7Factory),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 
