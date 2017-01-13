@@ -5,8 +5,6 @@ namespace Zelenin\HttpClient;
 
 final class RequestConfig
 {
-    const ATTRIBUTE_NAME = 'requestConfig';
-
     /**
      * @var bool
      */
@@ -15,12 +13,12 @@ final class RequestConfig
     /**
      * @var float
      */
-    private $timeOut;
+    private $timeout;
 
     public function __construct()
     {
         $this->followLocation = true;
-        $this->timeOut = 10.0;
+        $this->timeout = 10.0;
     }
 
     /**
@@ -48,7 +46,7 @@ final class RequestConfig
      */
     public function timeout(): float
     {
-        return $this->timeOut;
+        return $this->timeout;
     }
 
     /**

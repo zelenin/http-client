@@ -37,18 +37,16 @@ final class CurlTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request, RequestConfig $requestConfig = null): ResponseInterface
+    public function send(RequestInterface $request): ResponseInterface
     {
-        $requestConfig = $requestConfig ?: $this->requestConfig;
-
         $resource = fopen('php://temp', 'rb+');
 
         $curlOptions = [
             CURLOPT_CUSTOMREQUEST => $request->getMethod(),
             CURLOPT_RETURNTRANSFER => false,
-            CURLOPT_FOLLOWLOCATION => $requestConfig->followLocation(),
+            CURLOPT_FOLLOWLOCATION => $this->requestConfig->followLocation(),
             CURLOPT_HEADER => false,
-            CURLOPT_CONNECTTIMEOUT => $requestConfig->timeout(),
+            CURLOPT_CONNECTTIMEOUT => $this->requestConfig->timeout(),
             CURLOPT_FILE => $resource
         ];
 
@@ -118,12 +116,8 @@ final class CurlTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface {
-        return $next($request, $this->send($request, $requestConfig), $requestConfig);
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    {
+        return $next($request, $this->send($request));
     }
 }

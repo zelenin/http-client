@@ -32,15 +32,8 @@ final class MiddlewareClient implements Client
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request, RequestConfig $requestConfig = null): ResponseInterface
+    public function send(RequestInterface $request): ResponseInterface
     {
-        $requestConfig = $requestConfig ?: new RequestConfig();
-
-        return call_user_func(
-            $this->middlewareStack,
-            $request->wit,
-            $this->factory->createResponse($this->factory->createStream(fopen('php://temp', 'rb+')), 200, []),
-            $requestConfig
-        );
+        return call_user_func($this->middlewareStack, $request, $this->factory->createResponse($this->factory->createStream(fopen('php://temp', 'rb+')), 200, []));
     }
 }

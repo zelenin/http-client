@@ -38,18 +38,16 @@ final class StreamTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request, RequestConfig $requestConfig = null): ResponseInterface
+    public function send(RequestInterface $request): ResponseInterface
     {
-        $requestConfig = $requestConfig ?: $this->requestConfig;
-
         $context = [
             'http' => [
                 'method' => $request->getMethod(),
                 'header' => serializeHeadersFromPsr7Format($request->getHeaders()),
                 'protocol_version' => $request->getProtocolVersion(),
                 'ignore_errors' => true,
-                'timeout' => $requestConfig->timeout(),
-                'follow_location' => $requestConfig->followLocation()
+                'timeout' => $this->requestConfig->timeout(),
+                'follow_location' => $this->requestConfig->followLocation()
             ],
         ];
 
@@ -89,12 +87,8 @@ final class StreamTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface {
-        return $next($request, $this->send($request, $requestConfig), $requestConfig);
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    {
+        return $next($request, $this->send($request));
     }
 }
