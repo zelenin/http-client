@@ -59,7 +59,7 @@ final class ClientFactory
         return new MiddlewareStack([
             new UserAgent(sprintf('HttpClient/0.0.1 PHP/%s', PHP_VERSION)),
             new CurlTransport($requestConfig, $this->factory),
-            new Deflate()
+            new Deflate($this->factory)
         ]);
     }
 }

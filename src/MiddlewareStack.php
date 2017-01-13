@@ -35,26 +35,18 @@ final class MiddlewareStack
             $this->stack->push($middleware);
         });
 
-        $this->dispatcher = function (
-            RequestInterface $request,
-            ResponseInterface $response,
-            RequestConfig $requestConfig
-        ) {
+        $this->dispatcher = function (RequestInterface $request, ResponseInterface $response) {
             if (!$this->stack->valid()) {
-                return call_user_func($this->finalMiddleware, $request, $response, $requestConfig);
+                return call_user_func($this->finalMiddleware, $request, $response);
             }
 
             $middleware = $this->stack->current();
             $this->stack->next();
 
-            return call_user_func($middleware, $request, $response, $requestConfig, $this->dispatcher);
+            return call_user_func($middleware, $request, $response, $this->dispatcher);
         };
 
-        $this->finalMiddleware = function (
-            RequestInterface $request,
-            ResponseInterface $response,
-            RequestConfig $requestConfig
-        ) {
+        $this->finalMiddleware = function (RequestInterface $request, ResponseInterface $response) {
             return $response;
         };
     }
@@ -62,15 +54,14 @@ final class MiddlewareStack
     /**
      * @param RequestInterface $request
      * @param ResponseInterface $response
-     * @param RequestConfig $requestConfig
      * @param callable $next
      *
      * @return ResponseInterface
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, RequestConfig $requestConfig)
+    public function __invoke(RequestInterface $request, ResponseInterface $response)
     {
         $this->stack->rewind();
 
-        return call_user_func($this->dispatcher, $request, $response, $requestConfig);
+        return call_user_func($this->dispatcher, $request, $response);
     }
 }

@@ -11,15 +11,9 @@ interface Middleware
     /**
      * @param RequestInterface $request
      * @param ResponseInterface $response
-     * @param RequestConfig $requestConfig
      * @param callable $next
      *
      * @return ResponseInterface
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface;
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface;
 }

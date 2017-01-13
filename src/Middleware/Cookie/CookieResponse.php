@@ -7,7 +7,6 @@ use Dflydev\FigCookies\SetCookies;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\RequestConfig;
 
 final class CookieResponse implements Middleware
 {
@@ -27,16 +26,12 @@ final class CookieResponse implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface {
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    {
         foreach (SetCookies::fromResponse($response)->getAll() as $setCookie) {
             $this->storage->add($setCookie);
         }
 
-        return $next($request, $response, $requestConfig);
+        return $next($request, $response);
     }
 }

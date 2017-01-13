@@ -8,7 +8,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\RequestConfig;
 
 final class CookieRequest implements Middleware
 {
@@ -28,12 +27,8 @@ final class CookieRequest implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface {
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    {
         if (!$request->hasHeader('Cookie')) {
             $cookies = [];
 
@@ -50,7 +45,7 @@ final class CookieRequest implements Middleware
             }
         }
 
-        return $next($request, $response, $requestConfig);
+        return $next($request, $response);
     }
 
     /**

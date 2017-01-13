@@ -5,6 +5,8 @@ namespace Zelenin\HttpClient;
 
 final class RequestConfig
 {
+    const ATTRIBUTE_NAME = 'requestConfig';
+
     /**
      * @var bool
      */

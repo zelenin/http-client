@@ -6,7 +6,6 @@ namespace Zelenin\HttpClient\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\RequestConfig;
 
 final class UserAgent implements Middleware
 {
@@ -26,16 +25,12 @@ final class UserAgent implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(
-        RequestInterface $request,
-        ResponseInterface $response,
-        RequestConfig $requestConfig,
-        callable $next
-    ): ResponseInterface {
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    {
         if (!$request->hasHeader('User-Agent')) {
             $request = $request->withHeader('User-Agent', $this->userAgent);
         }
 
-        return $next($request, $response, $requestConfig);
+        return $next($request, $response);
     }
 }

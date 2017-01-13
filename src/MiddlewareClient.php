@@ -38,7 +38,7 @@ final class MiddlewareClient implements Client
 
         return call_user_func(
             $this->middlewareStack,
-            $request,
+            $request->wit,
             $this->factory->createResponse($this->factory->createStream(fopen('php://temp', 'rb+')), 200, []),
             $requestConfig
         );
