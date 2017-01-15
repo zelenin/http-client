@@ -28,38 +28,16 @@ final class ClientFactory
      *
      * @return Client
      */
-    public function createStreamClient(RequestConfig $requestConfig = null): Client
-    {
-        $middlewareStack = $this->createDefaultMiddlewareStack($requestConfig);
-
-        return new MiddlewareClient($middlewareStack, $this->factory);
-    }
-
-    /**
-     * @param RequestConfig $requestConfig
-     *
-     * @return Client
-     */
-    public function createCurlClient(RequestConfig $requestConfig = null): Client
-    {
-        $middlewareStack = $this->createDefaultMiddlewareStack($requestConfig);
-
-        return new MiddlewareClient($middlewareStack, $this->factory);
-    }
-
-    /**
-     * @param RequestConfig $requestConfig
-     *
-     * @return MiddlewareStack
-     */
-    private function createDefaultMiddlewareStack(RequestConfig $requestConfig = null): MiddlewareStack
+    public function create(RequestConfig $requestConfig = null): Client
     {
         $requestConfig = $requestConfig ?: new RequestConfig();
 
-        return new MiddlewareStack([
-            new UserAgent(sprintf('HttpClient/0.0.1 PHP/%s', PHP_VERSION)),
+        $middlewareStack = new MiddlewareStack([
+            new UserAgent(),
             new CurlTransport($requestConfig, $this->factory),
             new Deflate($this->factory)
         ]);
+
+        return new MiddlewareClient($middlewareStack, $this->factory);
     }
 }
