@@ -57,13 +57,13 @@ $psr7Factory = new DiactorosPsr7Factory();
 
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
-    new UserAgent(sprintf('HttpClient/0.1.0 PHP/%s', PHP_VERSION)), // pre-request middleware
+    new UserAgent(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION)), // pre-request middleware
     new CurlTransport(new RequestConfig(), $psr7Factory), // request middleware
     new Deflate($psr7Factory),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 
-$client = new MiddlewareClient($middlewareStack, $psr7Factory);T
+$client = new MiddlewareClient($middlewareStack, $psr7Factory);
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
