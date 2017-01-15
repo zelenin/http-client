@@ -119,3 +119,11 @@ function inflateStream(StreamInterface $stream, Psr7Factory $factory): StreamInt
 
     return copyResourceToStream($resource, $factory);
 }
+
+/**
+ * @return string
+ */
+function version(): string
+{
+    return '0.0.6';
+}

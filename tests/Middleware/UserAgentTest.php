@@ -7,6 +7,7 @@ use PHPUnit_Framework_TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware\UserAgent;
+use function Zelenin\HttpClient\version;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
 
@@ -27,7 +28,7 @@ final class UserAgentTest extends PHPUnit_Framework_TestCase
             callable $next = null
         ) {
             $this->assertTrue($request->hasHeader('User-Agent'));
-            $this->assertEquals(sprintf('HttpClient/0.0.1 PHP/%s', PHP_VERSION), $request->getHeader('User-Agent')[0]);
+            $this->assertEquals(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION), $request->getHeader('User-Agent')[0]);
 
             return $response;
         });

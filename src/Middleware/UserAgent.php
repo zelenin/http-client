@@ -6,6 +6,7 @@ namespace Zelenin\HttpClient\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware;
+use function Zelenin\HttpClient\version;
 
 final class UserAgent implements Middleware
 {
@@ -19,7 +20,7 @@ final class UserAgent implements Middleware
      */
     public function __construct(string $userAgent = null)
     {
-        $this->userAgent = $userAgent ?: sprintf('HttpClient/0.0.5 PHP/%s', PHP_VERSION);
+        $this->userAgent = $userAgent ?: sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION);
     }
 
     /**
