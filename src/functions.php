@@ -125,5 +125,5 @@ function inflateStream(StreamInterface $stream, Psr7Factory $factory): StreamInt
  */
 function version(): string
 {
-    return '0.0.6';
+    return '0.1.0';
 }

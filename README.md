@@ -11,13 +11,13 @@ The preferred way to install this extension is through [Composer](http://getcomp
 Either run
 
 ```
-php composer.phar require zelenin/http-client "~0.0.5"
+php composer.phar require zelenin/http-client "~0.1.0"
 ```
 
 or add
 
 ```
-"zelenin/http-client": "~0.0.5"
+"zelenin/http-client": "~0.1.0"
 ```
 
 to the ```require``` section of your ```composer.json```
@@ -30,7 +30,7 @@ use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-$client = (new ClientFactory(new DiactorosPsr7Factory()))->createCurlClient();
+$client = (new ClientFactory(new DiactorosPsr7Factory()))->create();
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
@@ -57,13 +57,13 @@ $psr7Factory = new DiactorosPsr7Factory();
 
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
-    new UserAgent(sprintf('HttpClient/0.0.5 PHP/%s', PHP_VERSION)), // pre-request middleware
+    new UserAgent(sprintf('HttpClient/0.1.0 PHP/%s', PHP_VERSION)), // pre-request middleware
     new CurlTransport(new RequestConfig(), $psr7Factory), // request middleware
     new Deflate($psr7Factory),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 
-$client = new MiddlewareClient($middlewareStack, $psr7Factory);
+$client = new MiddlewareClient($middlewareStack, $psr7Factory);T
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
