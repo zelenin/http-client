@@ -49,6 +49,7 @@ use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
+use function Zelenin\HttpClient\version;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
