@@ -35,6 +35,7 @@ final class DeflateTest extends TestCase
             ResponseInterface $response,
             callable $next = null
         ) {
+            $response->getBody()->rewind();
             $this->assertContains('Example Domain', $response->getBody()->getContents());
 
             return $response;
