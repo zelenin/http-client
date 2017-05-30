@@ -4,10 +4,10 @@
         <testsuite name="http-client">
             <directory>./tests</directory>
         </testsuite>
-        <filter>
-            <whitelist addUncoveredFilesFromWhitelist="true">
-                <directory suffix=".php">./src</directory>
-            </whitelist>
-        </filter>
     </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
