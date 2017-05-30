@@ -1,9 +1,9 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test\Middleware;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware\Deflate;
@@ -13,7 +13,7 @@ use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-final class DeflateTest extends PHPUnit_Framework_TestCase
+final class DeflateTest extends TestCase
 {
     public function testDeflate()
     {
@@ -22,7 +22,7 @@ final class DeflateTest extends PHPUnit_Framework_TestCase
         $middleware = new Deflate($factory);
 
         $request = new Request(new Uri('https://example.com/'), 'GET', 'php://temp', [
-            'Accept-Encoding' => 'gzip'
+            'Accept-Encoding' => 'gzip',
         ]);
 
         $response = (new CurlTransport(new RequestConfig(), $factory))->send($request);

@@ -1,16 +1,16 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test\Transport;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-final class CurlTransportTest extends PHPUnit_Framework_TestCase
+final class CurlTransportTest extends TestCase
 {
     public function testTransport()
     {

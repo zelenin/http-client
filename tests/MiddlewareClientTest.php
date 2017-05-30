@@ -1,9 +1,9 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zelenin\HttpClient\MiddlewareClient;
 use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
@@ -12,7 +12,7 @@ use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-final class MiddlewareClientTest extends PHPUnit_Framework_TestCase
+final class MiddlewareClientTest extends TestCase
 {
     public function testResponse()
     {
@@ -27,7 +27,7 @@ final class MiddlewareClientTest extends PHPUnit_Framework_TestCase
             new CurlTransport($requestConfig, $psr7Factory),
             function ($request, $response, $next) {
                 return $next($request, $response);
-            }
+            },
         ]);
 
         $client = new MiddlewareClient($middlewareStack, $psr7Factory);

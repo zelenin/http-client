@@ -1,12 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zelenin\HttpClient\RequestConfig;
 
-final class RequestConfigTest extends PHPUnit_Framework_TestCase
+final class RequestConfigTest extends TestCase
 {
     public function testDefaultConfig()
     {

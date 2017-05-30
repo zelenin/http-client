@@ -1,16 +1,16 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test\Transport;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\StreamTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-final class StreamTransportTest extends PHPUnit_Framework_TestCase
+final class StreamTransportTest extends TestCase
 {
     public function testTransport()
     {

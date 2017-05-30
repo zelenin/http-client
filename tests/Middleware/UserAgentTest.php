@@ -1,17 +1,17 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Test\Middleware;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware\UserAgent;
-use function Zelenin\HttpClient\version;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
+use function Zelenin\HttpClient\version;
 
-final class UserAgentTest extends PHPUnit_Framework_TestCase
+final class UserAgentTest extends TestCase
 {
     public function testDefaultUserAgent()
     {
