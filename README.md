@@ -1,5 +1,8 @@
 # HTTP client
 
+[![Build Status](https://travis-ci.org/zelenin/http-client.svg?branch=master)](https://travis-ci.org/zelenin/http-client)
+[![Coverage Status](https://coveralls.io/repos/github/zelenin/http-client/badge.svg?branch=master)](https://coveralls.io/github/zelenin/http-client?branch=master)
+
 [PSR-7](http://www.php-fig.org/psr/psr-7/) compatible HTTP client with middleware support.
 
 ## Installation
