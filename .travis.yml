@@ -5,7 +5,6 @@ php:
 install:
     - composer install --dev --no-interaction
 script:
-    - mkdir -p build/logs
-    - php vendor/bin/phpunit -c phpunit.xml.dist
+    - php vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover ./clover.xml
 after_success:
     - travis_retry php vendor/bin/coveralls -v
