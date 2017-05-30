@@ -17,6 +17,10 @@ final class DeflateTest extends TestCase
 {
     public function testDeflate()
     {
+        if (PHP_VERSION >= 7) {
+            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
+        }
+
         $factory = new DiactorosPsr7Factory();
 
         $middleware = new Deflate($factory);
@@ -35,7 +39,6 @@ final class DeflateTest extends TestCase
             ResponseInterface $response,
             callable $next = null
         ) {
-            $response->getBody()->rewind();
             $this->assertContains('Example Domain', $response->getBody()->getContents());
 
             return $response;

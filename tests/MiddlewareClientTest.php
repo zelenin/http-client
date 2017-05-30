@@ -16,6 +16,10 @@ final class MiddlewareClientTest extends TestCase
 {
     public function testResponse()
     {
+        if (PHP_VERSION >= 7) {
+            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
+        }
+
         $requestConfig = new RequestConfig();
 
         $psr7Factory = new DiactorosPsr7Factory();
