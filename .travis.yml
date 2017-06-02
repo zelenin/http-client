@@ -1,7 +1,11 @@
 language: php
 php:
-    - '7.0'
-    - '7.1'
+    - "7.0"
+    - "7.1"
+notifications:
+    email:
+        on_success: "always"
+        on_failure: "always"
 install:
     - composer install --no-interaction
 script:
@@ -9,3 +13,4 @@ script:
     - php ./vendor/bin/phpunit -c ./phpunit.xml.dist --coverage-clover ./build/logs/clover.xml
 after_success:
     - travis_retry php vendor/bin/coveralls -v
+
