@@ -10,7 +10,7 @@ use Zelenin\HttpClient\MiddlewareDispatcher;
 use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Test\Resource\ClosureWrapMiddleware;
-use Zelenin\HttpClient\Transport\CurlTransport;
+use Zelenin\HttpClient\Transport\StreamTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
@@ -18,17 +18,13 @@ final class MiddlewareClientTest extends TestCase
 {
     public function testResponse()
     {
-        if (PHP_VERSION >= 7) {
-            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-        }
-
         $requestConfig = new RequestConfig();
 
         $middlewareStack = new MiddlewareStack([
             new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {
                 return $dispatcher($request);
             }, true),
-            new CurlTransport($requestConfig),
+            new StreamTransport($requestConfig),
             new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {
                 return $dispatcher($request);
             }, true),

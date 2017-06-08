@@ -11,7 +11,7 @@ use Zelenin\HttpClient\MiddlewareDispatcher;
 use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Test\Resource\ClosureWrapMiddleware;
-use Zelenin\HttpClient\Transport\CurlTransport;
+use Zelenin\HttpClient\Transport\StreamTransport;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
@@ -19,12 +19,8 @@ final class DeflateTest extends TestCase
 {
     public function testDeflate()
     {
-        if (PHP_VERSION >= 7) {
-            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-        }
-
         $dispatcher = new MiddlewareDispatcher(new MiddlewareStack([
-            new CurlTransport(new RequestConfig()),
+            new StreamTransport(new RequestConfig()),
             new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {
                 $response = $dispatcher->response();
 
