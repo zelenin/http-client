@@ -19,6 +19,10 @@ final class DeflateTest extends TestCase
 {
     public function testDeflate()
     {
+        if (PHP_VERSION >= 7) {
+            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
+        }
+
         $dispatcher = new MiddlewareDispatcher(new MiddlewareStack([
             new CurlTransport(new RequestConfig()),
             new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {

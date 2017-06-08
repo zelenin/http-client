@@ -13,6 +13,10 @@ final class CurlTransportTest extends TestCase
 {
     public function testTransport()
     {
+        if (PHP_VERSION >= 7) {
+            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
+        }
+
         $transport = new CurlTransport(new RequestConfig());
 
         $request = (new Request(new Uri('https://example.org/'), 'GET'))
