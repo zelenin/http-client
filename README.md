@@ -11,13 +11,13 @@ The preferred way to install this extension is through [Composer](http://getcomp
 Either run
 
 ```
-php composer.phar require zelenin/http-client "~0.1.0"
+php composer.phar require zelenin/http-client "~1.0.0"
 ```
 
 or add
 
 ```
-"zelenin/http-client": "~0.1.0"
+"zelenin/http-client": "~1.0.0"
 ```
 
 to the ```require``` section of your ```composer.json```
@@ -26,11 +26,10 @@ to the ```require``` section of your ```composer.json```
 
 ```php
 use Zelenin\HttpClient\ClientFactory;
-use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
-$client = (new ClientFactory(new DiactorosPsr7Factory()))->create();
+$client = (new ClientFactory())->create();
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
@@ -54,13 +53,12 @@ use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
 $cookieStorage = new FileStorage('/tmp/http-client/cookies.storage');
-$psr7Factory = new DiactorosPsr7Factory();
 
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
     new UserAgent(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION)), // pre-request middleware
-    new CurlTransport(new RequestConfig(), $psr7Factory), // request middleware
-    new Deflate($psr7Factory),  // post-request middleware
+    new CurlTransport(new RequestConfig()), // request middleware
+    new Deflate(),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 

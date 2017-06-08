@@ -1,38 +1,27 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\Psr7\Psr7Factory;
+use Zelenin\HttpClient\MiddlewareDispatcher;
 use function Zelenin\HttpClient\inflateStream;
 
 final class Deflate implements Middleware
 {
     /**
-     * @var Psr7Factory
-     */
-    private $factory;
-
-    /**
-     * @param Psr7Factory $factory
-     */
-    public function __construct(Psr7Factory $factory)
-    {
-        $this->factory = $factory;
-    }
-
-    /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
     {
+        $response = $dispatcher->response();
+
         if ($response->hasHeader('Content-Encoding')) {
             $encoding = $response->getHeader('Content-Encoding');
             if ($encoding[0] === 'gzip' || $encoding[0] === 'deflate') {
-                $stream = inflateStream($response->getBody(), $this->factory);
+                $stream = inflateStream($response->getBody());
 
                 $response = $response
                     ->withBody($stream)
@@ -47,6 +36,8 @@ final class Deflate implements Middleware
             }
         }
 
-        return $next($request, $response);
+        $dispatcher = $dispatcher->withResponse($response);
+
+        return $dispatcher($request);
     }
 }

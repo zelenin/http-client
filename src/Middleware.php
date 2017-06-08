@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient;
 
@@ -10,10 +10,9 @@ interface Middleware
 {
     /**
      * @param RequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
+     * @param MiddlewareDispatcher $dispatcher
      *
      * @return ResponseInterface
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface;
+    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface;
 }

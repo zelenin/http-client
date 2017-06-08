@@ -5,10 +5,12 @@ namespace Zelenin\HttpClient\Test\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Zelenin\HttpClient\FinalMiddleware;
 use Zelenin\HttpClient\Middleware\UserAgent;
+use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareStack;
+use Zelenin\HttpClient\Test\Resource\ClosureWrapMiddleware;
 use Zend\Diactoros\Request;
-use Zend\Diactoros\Response;
 use function Zelenin\HttpClient\version;
 
 final class UserAgentTest extends TestCase
@@ -18,20 +20,20 @@ final class UserAgentTest extends TestCase
         $middleware = new UserAgent();
 
         $request = new Request();
-        $response = new Response();
 
         $this->assertFalse($request->hasHeader('User-Agent'));
 
-        $middleware($request, $response, function (
-            RequestInterface $request,
-            ResponseInterface $response,
-            callable $next = null
-        ) {
-            $this->assertTrue($request->hasHeader('User-Agent'));
-            $this->assertEquals(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION), $request->getHeader('User-Agent')[0]);
+        $dispatcher = new MiddlewareDispatcher(new MiddlewareStack([
+            new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {
+                $this->assertTrue($request->hasHeader('User-Agent'));
+                $this->assertEquals(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION), $request->getHeader('User-Agent')[0]);
 
-            return $response;
-        });
+                return $dispatcher($request);
+            }, true),
+        ]), new FinalMiddleware());
+
+
+        $middleware($request, $dispatcher);
     }
 
     public function testUserAgent()
@@ -40,16 +42,15 @@ final class UserAgentTest extends TestCase
         $middleware = new UserAgent($userAgent);
 
         $request = new Request();
-        $response = new Response();
 
-        $middleware($request, $response, function (
-            RequestInterface $request,
-            ResponseInterface $response,
-            callable $next = null
-        ) use ($userAgent) {
-            $this->assertEquals($userAgent, $request->getHeader('User-Agent')[0]);
+        $dispatcher = new MiddlewareDispatcher(new MiddlewareStack([
+            new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) use ($userAgent) {
+                $this->assertEquals($userAgent, $request->getHeader('User-Agent')[0]);
 
-            return $response;
-        });
+                return $dispatcher($request);
+            }, true),
+        ]), new FinalMiddleware());
+
+        $middleware($request, $dispatcher);
     }
 }

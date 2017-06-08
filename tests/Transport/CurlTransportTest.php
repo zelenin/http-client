@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Zelenin\HttpClient\Test\Transport;
 
 use PHPUnit\Framework\TestCase;
-use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
@@ -14,11 +13,7 @@ final class CurlTransportTest extends TestCase
 {
     public function testTransport()
     {
-        if (PHP_VERSION >= 7) {
-            $this->markTestSkipped('Not supported on PHP 7 (empty chunk will not be emitted)');
-        }
-
-        $transport = new CurlTransport(new RequestConfig(), new DiactorosPsr7Factory());
+        $transport = new CurlTransport(new RequestConfig());
 
         $request = (new Request(new Uri('https://example.org/'), 'GET'))
             ->withHeader('Accept-Encoding', 'text/html');

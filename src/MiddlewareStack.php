@@ -1,10 +1,8 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use SplQueue;
 
 final class MiddlewareStack
@@ -15,53 +13,38 @@ final class MiddlewareStack
     private $stack;
 
     /**
-     * @var callable
+     * @param Middleware[] $middlewares
      */
-    private $dispatcher;
-
-    /**
-     * @var callable
-     */
-    private $finalMiddleware;
-
-    /**
-     * @param callable[] $items
-     */
-    public function __construct(array $items)
+    public function __construct(array $middlewares)
     {
         $this->stack = new SplQueue();
 
-        array_walk($items, function (callable $middleware) {
+        array_walk($middlewares, function (Middleware $middleware) {
             $this->stack->push($middleware);
         });
+    }
 
-        $this->dispatcher = function (RequestInterface $request, ResponseInterface $response) {
-            if (!$this->stack->valid()) {
-                return call_user_func($this->finalMiddleware, $request, $response);
-            }
-
-            $middleware = $this->stack->current();
-            $this->stack->next();
-
-            return call_user_func($middleware, $request, $response, $this->dispatcher);
-        };
-
-        $this->finalMiddleware = function (RequestInterface $request, ResponseInterface $response) {
-            return $response;
-        };
+    public function reset()
+    {
+        $this->stack->rewind();
     }
 
     /**
-     * @param RequestInterface $request
-     * @param ResponseInterface $response
-     * @param callable $next
-     *
-     * @return ResponseInterface
+     * @return bool
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response)
+    public function isValid(): bool
     {
-        $this->stack->rewind();
+        return $this->stack->valid();
+    }
 
-        return call_user_func($this->dispatcher, $request, $response);
+    /**
+     * @return Middleware
+     */
+    public function next(): Middleware
+    {
+        $middleware = $this->stack->current();
+        $this->stack->next();
+
+        return $middleware;
     }
 }

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Zelenin\HttpClient\Middleware\Cookie;
 
@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Zelenin\HttpClient\Middleware;
+use Zelenin\HttpClient\MiddlewareDispatcher;
 
 final class CookieRequest implements Middleware
 {
@@ -27,7 +28,7 @@ final class CookieRequest implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next): ResponseInterface
+    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
     {
         if (!$request->hasHeader('Cookie')) {
             $cookies = [];
@@ -45,7 +46,7 @@ final class CookieRequest implements Middleware
             }
         }
 
-        return $next($request, $response);
+        return $dispatcher($request);
     }
 
     /**

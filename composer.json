@@ -22,12 +22,11 @@
     },
     "require": {
         "php": ">=7.0",
-        "psr/http-message": "~1.0.0",
+        "zendframework/zend-diactoros": "~1.0",
         "dflydev/fig-cookies": "~1.0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.0",
-        "zendframework/zend-diactoros": "~1.0",
         "satooshi/php-coveralls": "~1.0.0"
     },
     "autoload": {
@@ -42,9 +41,5 @@
         "psr-4": {
             "Zelenin\\HttpClient\\Test\\": "tests"
         }
-    },
-    "suggest": {
-        "zendframework/zend-diactoros": "~1.0 for Zend Diactoros implementation of Psr7Factory",
-        "guzzlehttp/psr7": "~1.0 for Guzzle PSR-7 implementation of Psr7Factory"
     }
 }
