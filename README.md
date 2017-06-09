@@ -45,7 +45,6 @@ use Zelenin\HttpClient\Middleware\Deflate;
 use Zelenin\HttpClient\Middleware\UserAgent;
 use Zelenin\HttpClient\MiddlewareClient;
 use Zelenin\HttpClient\MiddlewareStack;
-use Zelenin\HttpClient\Psr7\DiactorosPsr7Factory;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
 use function Zelenin\HttpClient\version;
@@ -62,7 +61,7 @@ $middlewareStack = new MiddlewareStack([
     new CookieResponse($cookieStorage) // post-request middleware
 ]);
 
-$client = new MiddlewareClient($middlewareStack, $psr7Factory);
+$client = new MiddlewareClient($middlewareStack);
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->send($request);
