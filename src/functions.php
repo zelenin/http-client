@@ -62,15 +62,15 @@ function normalizeHeader(string $header): string
  */
 function filterLastResponseHeaders(array $headers): array
 {
-    $newHeaders = [];
+    $filteredHeaders = [];
     foreach ($headers as $header) {
         if (strpos($header, 'HTTP/') === 0) {
-            $newHeaders = [];
+            $filteredHeaders = [];
         }
-        $newHeaders[] = $header;
+        $filteredHeaders[] = $header;
     }
 
-    return $newHeaders;
+    return $filteredHeaders;
 }
 
 /**
