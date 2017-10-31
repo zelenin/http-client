@@ -13,6 +13,7 @@ use Zelenin\HttpClient\RequestConfig;
 use Zend\Diactoros\Response;
 use function Zelenin\HttpClient\copyResourceToStream;
 use function Zelenin\HttpClient\deserializeHeadersToPsr7Format;
+use function Zelenin\HttpClient\filterLastResponseHeaders;
 use function Zelenin\HttpClient\serializeHeadersFromPsr7Format;
 
 final class StreamTransport implements Transport, Middleware
@@ -65,6 +66,10 @@ final class StreamTransport implements Transport, Middleware
         $stream = copyResourceToStream($resource);
 
         $headers = stream_get_meta_data($resource)['wrapper_data'] ?? [];
+
+        if ($this->requestConfig->followLocation()) {
+            $headers = filterLastResponseHeaders($headers);
+        }
 
         fclose($resource);
 

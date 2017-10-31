@@ -56,6 +56,24 @@ function normalizeHeader(string $header): string
 }
 
 /**
+ * @param array $headers
+ *
+ * @return array
+ */
+function filterLastResponseHeaders(array $headers): array
+{
+    $newHeaders = [];
+    foreach ($headers as $header) {
+        if (strpos($header, 'HTTP/') === 0) {
+            $newHeaders = [];
+        }
+        $newHeaders[] = $header;
+    }
+
+    return $newHeaders;
+}
+
+/**
  * @param StreamInterface $stream
  *
  * @return resource
@@ -124,5 +142,5 @@ function inflateStream(StreamInterface $stream): StreamInterface
  */
 function version(): string
 {
-    return '1.0.0';
+    return '1.0.2';
 }
