@@ -142,5 +142,5 @@ function inflateStream(StreamInterface $stream): StreamInterface
  */
 function version(): string
 {
-    return '1.0.2';
+    return '1.0.3';
 }

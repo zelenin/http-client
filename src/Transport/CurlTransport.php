@@ -12,6 +12,7 @@ use Zelenin\HttpClient\RequestConfig;
 use Zend\Diactoros\Response;
 use function Zelenin\HttpClient\copyResourceToStream;
 use function Zelenin\HttpClient\deserializeHeadersToPsr7Format;
+use function Zelenin\HttpClient\filterLastResponseHeaders;
 use function Zelenin\HttpClient\serializeHeadersFromPsr7Format;
 
 final class CurlTransport implements Transport, Middleware
@@ -87,6 +88,11 @@ final class CurlTransport implements Transport, Middleware
         curl_exec($curlResource);
 
         $stream = copyResourceToStream($resource);
+
+        if ($this->requestConfig->followLocation()) {
+            $headers = filterLastResponseHeaders($headers);
+        }
+
         fclose($resource);
 
         $errorNumber = curl_errno($curlResource);
