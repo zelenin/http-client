@@ -1,6 +1,6 @@
 # HTTP client [![Build Status](https://travis-ci.org/zelenin/http-client.svg?branch=master)](https://travis-ci.org/zelenin/http-client) [![Coverage Status](https://coveralls.io/repos/github/zelenin/http-client/badge.svg?branch=master)](https://coveralls.io/github/zelenin/http-client?branch=master)
 
-[PSR-7](http://www.php-fig.org/psr/psr-7/) compatible HTTP client with middleware support.
+[PSR-18](http://www.php-fig.org/psr/psr-18/) compatible HTTP client with middleware support.
 
 ## Installation
 
@@ -11,13 +11,13 @@ The preferred way to install this extension is through [Composer](http://getcomp
 Either run
 
 ```
-php composer.phar require zelenin/http-client "~1.0.0"
+php composer.phar require zelenin/http-client "~2.0.0"
 ```
 
 or add
 
 ```
-"zelenin/http-client": "~1.0.0"
+"zelenin/http-client": "~2.0.0"
 ```
 
 to the ```require``` section of your ```composer.json```
@@ -32,7 +32,7 @@ use Zend\Diactoros\Uri;
 $client = (new ClientFactory())->create();
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
-$response = $client->send($request);
+$response = $client->sendRequest($request);
 ```
 
 ### Full example with middleware stack
@@ -47,7 +47,6 @@ use Zelenin\HttpClient\MiddlewareClient;
 use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
-use function Zelenin\HttpClient\version;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Uri;
 
@@ -55,7 +54,7 @@ $cookieStorage = new FileStorage('/tmp/http-client/cookies.storage');
 
 $middlewareStack = new MiddlewareStack([
     new CookieRequest($cookieStorage), // pre-request middleware
-    new UserAgent(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION)), // pre-request middleware
+    new UserAgent(sprintf('HttpClient PHP/%s', PHP_VERSION)), // pre-request middleware
     new CurlTransport(new RequestConfig()), // request middleware
     new Deflate(),  // post-request middleware
     new CookieResponse($cookieStorage) // post-request middleware
@@ -64,7 +63,7 @@ $middlewareStack = new MiddlewareStack([
 $client = new MiddlewareClient($middlewareStack);
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
-$response = $client->send($request);
+$response = $client->sendRequest($request);
 ```
 
 ## Author

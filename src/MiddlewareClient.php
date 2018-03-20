@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Zelenin\HttpClient;
 
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-final class MiddlewareClient implements Client
+final class MiddlewareClient implements ClientInterface
 {
     /**
      * @var MiddlewareStack
@@ -24,7 +25,7 @@ final class MiddlewareClient implements Client
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $dispatcher = new MiddlewareDispatcher($this->middlewareStack, new FinalMiddleware());
 

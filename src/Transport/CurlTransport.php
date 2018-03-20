@@ -6,6 +6,7 @@ namespace Zelenin\HttpClient\Transport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Exception\ConnectException;
+use Zelenin\HttpClient\Exception\NetworkException;
 use Zelenin\HttpClient\Middleware;
 use Zelenin\HttpClient\MiddlewareDispatcher;
 use Zelenin\HttpClient\RequestConfig;
@@ -22,7 +23,6 @@ final class CurlTransport implements Transport, Middleware
      */
     private $requestConfig;
 
-
     /**
      * @param RequestConfig $requestConfig
      */
@@ -34,9 +34,9 @@ final class CurlTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $resource = fopen('php://temp', 'rb+');
+        $resource = fopen('php://temp', 'wb');
 
         $curlOptions = [
             CURLOPT_CUSTOMREQUEST => $request->getMethod(),
@@ -99,7 +99,7 @@ final class CurlTransport implements Transport, Middleware
         $errorMessage = curl_error($curlResource);
 
         if ($errorNumber) {
-            throw new ConnectException($errorMessage, 0);
+            throw new NetworkException($errorMessage, $request);
         }
 
         $parts = explode(' ', array_shift($headers), 3);
@@ -119,7 +119,7 @@ final class CurlTransport implements Transport, Middleware
      */
     public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
     {
-        $response = $this->send($request);
+        $response = $this->sendRequest($request);
 
         $dispatcher = $dispatcher->withResponse($response);
 

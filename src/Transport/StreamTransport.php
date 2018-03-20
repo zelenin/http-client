@@ -6,6 +6,7 @@ namespace Zelenin\HttpClient\Transport;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Exception\ConnectException;
+use Zelenin\HttpClient\Exception\NetworkException;
 use Zelenin\HttpClient\Exception\RequestException;
 use Zelenin\HttpClient\Middleware;
 use Zelenin\HttpClient\MiddlewareDispatcher;
@@ -34,7 +35,7 @@ final class StreamTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function send(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $context = [
             'http' => [
@@ -56,9 +57,9 @@ final class StreamTransport implements Transport, Middleware
         if (!is_resource($resource)) {
             $error = error_get_last()['message'];
             if (strpos($error, 'getaddrinfo') || strpos($error, 'Connection refused')) {
-                $e = new ConnectException($error, 0);
+                $e = new NetworkException($error, $request);
             } else {
-                $e = new RequestException($error, 0);
+                $e = new RequestException($error, $request);
             }
             throw $e;
         }
@@ -88,7 +89,7 @@ final class StreamTransport implements Transport, Middleware
      */
     public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
     {
-        $response = $this->send($request);
+        $response = $this->sendRequest($request);
 
         $dispatcher = $dispatcher->withResponse($response);
 

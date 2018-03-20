@@ -18,7 +18,7 @@ final class StreamTransportTest extends TestCase
         $request = (new Request(new Uri('https://example.org/'), 'GET'))
             ->withHeader('Accept-Encoding', 'text/html');
 
-        $response = $transport->send($request);
+        $response = $transport->sendRequest($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['text/html'], $response->getHeader('Content-type'));

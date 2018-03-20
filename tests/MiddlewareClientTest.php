@@ -33,7 +33,7 @@ final class MiddlewareClientTest extends TestCase
         $client = new MiddlewareClient($middlewareStack);
 
         $request = new Request(new Uri('https://example.com/'), 'GET');
-        $response = $client->send($request);
+        $response = $client->sendRequest($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['text/html'], $response->getHeader('Content-type'));

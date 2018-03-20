@@ -71,7 +71,7 @@ final class FileStorage implements Storage
         $json = file_get_contents($this->filePath);
         if (false === $json) {
             throw new RuntimeException(sprintf('Unable to load file %s.', $this->filePath));
-        } elseif ($json === '') {
+        } else if ($json === '') {
             return;
         }
 

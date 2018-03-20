@@ -11,7 +11,6 @@ use Zelenin\HttpClient\MiddlewareDispatcher;
 use Zelenin\HttpClient\MiddlewareStack;
 use Zelenin\HttpClient\Test\Resource\ClosureWrapMiddleware;
 use Zend\Diactoros\Request;
-use function Zelenin\HttpClient\version;
 
 final class UserAgentTest extends TestCase
 {
@@ -26,12 +25,11 @@ final class UserAgentTest extends TestCase
         $dispatcher = new MiddlewareDispatcher(new MiddlewareStack([
             new ClosureWrapMiddleware(function (RequestInterface $request, MiddlewareDispatcher $dispatcher) {
                 $this->assertTrue($request->hasHeader('User-Agent'));
-                $this->assertEquals(sprintf('HttpClient/%s PHP/%s', version(), PHP_VERSION), $request->getHeader('User-Agent')[0]);
+                $this->assertEquals(sprintf('HttpClient PHP/%s', PHP_VERSION), $request->getHeader('User-Agent')[0]);
 
                 return $dispatcher($request);
             }, true),
         ]), new FinalMiddleware());
-
 
         $middleware($request, $dispatcher);
     }

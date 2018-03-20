@@ -104,6 +104,10 @@ function copyResourceToStream($resource): StreamInterface
         throw new InvalidArgumentException('Not resource.');
     }
 
+    if (stream_get_meta_data($resource)['seekable']) {
+        rewind($resource);
+    }
+
     $tempResource = fopen('php://temp', 'rb+');
 
     stream_copy_to_stream($resource, $tempResource);
@@ -135,12 +139,4 @@ function inflateStream(StreamInterface $stream): StreamInterface
     stream_filter_append($resource, "zlib.inflate", STREAM_FILTER_READ);
 
     return copyResourceToStream($resource);
-}
-
-/**
- * @return string
- */
-function version(): string
-{
-    return '1.0.3';
 }

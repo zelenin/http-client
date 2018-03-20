@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Zelenin\HttpClient\Test;
 
 use PHPUnit\Framework\TestCase;
-use Zelenin\HttpClient\Client;
+use Psr\Http\Client\ClientInterface;
 use Zelenin\HttpClient\ClientFactory;
 
 final class ClientFactoryTest extends TestCase
@@ -13,6 +13,6 @@ final class ClientFactoryTest extends TestCase
     {
         $factory = new ClientFactory();
 
-        $this->assertInstanceOf(Client::class, $factory->create());
+        $this->assertInstanceOf(ClientInterface::class, $factory->create());
     }
 }

@@ -50,6 +50,27 @@ final class CookieRequest implements Middleware
     }
 
     /**
+     * @param string $cookieDomain
+     * @param string $requestDomain
+     *
+     * @return bool
+     */
+    public function matchesDomain(string $cookieDomain, string $requestDomain): bool
+    {
+        $cookieDomain = ltrim($cookieDomain, '.');
+
+        if (!$cookieDomain || !strcasecmp($requestDomain, $cookieDomain)) {
+            return true;
+        }
+
+        if (filter_var($requestDomain, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
+        return (bool)preg_match('/\.' . preg_quote($cookieDomain, '/') . '$/', $requestDomain);
+    }
+
+    /**
      * @param SetCookie $setCookie
      * @param UriInterface $uri
      *
@@ -99,26 +120,5 @@ final class CookieRequest implements Middleware
         }
 
         return substr($requestPath, strlen($cookiePath), 1) === '/';
-    }
-
-    /**
-     * @param string $cookieDomain
-     * @param string $requestDomain
-     *
-     * @return bool
-     */
-    public function matchesDomain(string $cookieDomain, string $requestDomain): bool
-    {
-        $cookieDomain = ltrim($cookieDomain, '.');
-
-        if (!$cookieDomain || !strcasecmp($requestDomain, $cookieDomain)) {
-            return true;
-        }
-
-        if (filter_var($requestDomain, FILTER_VALIDATE_IP)) {
-            return false;
-        }
-
-        return (bool)preg_match('/\.' . preg_quote($cookieDomain, '/') . '$/', $requestDomain);
     }
 }

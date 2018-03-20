@@ -1,8 +1,9 @@
 {
     "name": "zelenin/http-client",
-    "description": "PSR-7 compatible HTTP client with middleware support",
+    "description": "PSR-18 compatible HTTP client with middleware support",
     "keywords": [
         "psr-7",
+        "psr-18",
         "http",
         "client",
         "middleware"
@@ -22,6 +23,7 @@
     },
     "require": {
         "php": ">=7.0",
+        "psr/http-client": "~0.1",
         "zendframework/zend-diactoros": "~1.0",
         "dflydev/fig-cookies": "~1.0.2"
     },
