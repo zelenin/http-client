@@ -7,16 +7,16 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zelenin\HttpClient\Exception\ConnectException;
 use Zelenin\HttpClient\Exception\NetworkException;
-use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareInterface;
 use Zelenin\HttpClient\RequestConfig;
+use Zelenin\HttpClient\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 use function Zelenin\HttpClient\copyResourceToStream;
 use function Zelenin\HttpClient\deserializeHeadersToPsr7Format;
 use function Zelenin\HttpClient\filterLastResponseHeaders;
 use function Zelenin\HttpClient\serializeHeadersFromPsr7Format;
 
-final class CurlTransport implements Transport, Middleware
+final class CurlTransport implements Transport, MiddlewareInterface
 {
     /**
      * @var RequestConfig
@@ -117,12 +117,8 @@ final class CurlTransport implements Transport, Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $this->sendRequest($request);
-
-        $dispatcher = $dispatcher->withResponse($response);
-
-        return $dispatcher($request);
+        return $this->sendRequest($request);
     }
 }

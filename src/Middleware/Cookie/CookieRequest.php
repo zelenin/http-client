@@ -7,10 +7,10 @@ use Dflydev\FigCookies\SetCookie;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareInterface;
+use Zelenin\HttpClient\RequestHandlerInterface;
 
-final class CookieRequest implements Middleware
+final class CookieRequest implements MiddlewareInterface
 {
     /**
      * @var Storage
@@ -28,7 +28,7 @@ final class CookieRequest implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!$request->hasHeader('Cookie')) {
             $cookies = [];
@@ -46,7 +46,7 @@ final class CookieRequest implements Middleware
             }
         }
 
-        return $dispatcher($request);
+        return $handler->handle($request);
     }
 
     /**

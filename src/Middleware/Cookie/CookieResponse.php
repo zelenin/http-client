@@ -6,10 +6,10 @@ namespace Zelenin\HttpClient\Middleware\Cookie;
 use Dflydev\FigCookies\SetCookies;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareInterface;
+use Zelenin\HttpClient\RequestHandlerInterface;
 
-final class CookieResponse implements Middleware
+final class CookieResponse implements MiddlewareInterface
 {
     /**
      * @var Storage
@@ -27,14 +27,14 @@ final class CookieResponse implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $dispatcher->response();
+        $response = $handler->handle($request);
 
         foreach (SetCookies::fromResponse($response)->getAll() as $setCookie) {
             $this->storage->add($setCookie);
         }
 
-        return $dispatcher($request);
+        return $response;
     }
 }

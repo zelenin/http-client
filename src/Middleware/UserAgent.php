@@ -5,10 +5,10 @@ namespace Zelenin\HttpClient\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareInterface;
+use Zelenin\HttpClient\RequestHandlerInterface;
 
-final class UserAgent implements Middleware
+final class UserAgent implements MiddlewareInterface
 {
     /**
      * @var string
@@ -26,12 +26,12 @@ final class UserAgent implements Middleware
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!$request->hasHeader('User-Agent')) {
             $request = $request->withHeader('User-Agent', $this->userAgent);
         }
 
-        return $dispatcher($request);
+        return $handler->handle($request);
     }
 }

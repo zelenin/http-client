@@ -10,16 +10,18 @@ use Psr\Http\Message\ResponseInterface;
 final class MiddlewareClient implements ClientInterface
 {
     /**
-     * @var MiddlewareStack
+     * @var array|MiddlewareInterface[]
      */
-    private $middlewareStack;
+    private $middlewares;
 
     /**
-     * @param MiddlewareStack $middlewareStack
+     * @param array|MiddlewareInterface[] $middlewares
      */
-    public function __construct(MiddlewareStack $middlewareStack)
+    public function __construct(array $middlewares)
     {
-        $this->middlewareStack = $middlewareStack;
+        $this->middlewares = array_map(function (MiddlewareInterface $middleware) {
+            return $middleware;
+        }, $middlewares);
     }
 
     /**
@@ -27,8 +29,8 @@ final class MiddlewareClient implements ClientInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $dispatcher = new MiddlewareDispatcher($this->middlewareStack, new FinalMiddleware());
+        $requestHandler = new RequestHandler($this->middlewares, new FallbackMiddleware());
 
-        return call_user_func($dispatcher, $request);
+        return $requestHandler->handle($request);
     }
 }

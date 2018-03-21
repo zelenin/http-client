@@ -5,18 +5,18 @@ namespace Zelenin\HttpClient\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zelenin\HttpClient\Middleware;
-use Zelenin\HttpClient\MiddlewareDispatcher;
+use Zelenin\HttpClient\MiddlewareInterface;
+use Zelenin\HttpClient\RequestHandlerInterface;
 use function Zelenin\HttpClient\inflateStream;
 
-final class Deflate implements Middleware
+final class Deflate implements MiddlewareInterface
 {
     /**
      * @inheritdoc
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface
+    public function process(RequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $dispatcher->response();
+        $response = $handler->handle($request);
 
         if ($response->hasHeader('Content-Encoding')) {
             $encoding = $response->getHeader('Content-Encoding');
@@ -36,8 +36,6 @@ final class Deflate implements Middleware
             }
         }
 
-        $dispatcher = $dispatcher->withResponse($response);
-
-        return $dispatcher($request);
+        return $response;
     }
 }

@@ -19,12 +19,10 @@ final class ClientFactory
     {
         $requestConfig = $requestConfig ?: new RequestConfig();
 
-        $middlewareStack = new MiddlewareStack([
+        return new MiddlewareClient([
             new UserAgent(),
-            new CurlTransport($requestConfig),
             new Deflate(),
+            new CurlTransport($requestConfig),
         ]);
-
-        return new MiddlewareClient($middlewareStack);
     }
 }

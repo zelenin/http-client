@@ -6,13 +6,12 @@ namespace Zelenin\HttpClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-interface Middleware
+interface RequestHandlerInterface
 {
     /**
      * @param RequestInterface $request
-     * @param MiddlewareDispatcher $dispatcher
      *
      * @return ResponseInterface
      */
-    public function __invoke(RequestInterface $request, MiddlewareDispatcher $dispatcher): ResponseInterface;
+    public function handle(RequestInterface $request): ResponseInterface;
 }
