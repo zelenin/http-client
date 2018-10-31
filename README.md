@@ -1,6 +1,6 @@
 # HTTP client [![Build Status](https://travis-ci.org/zelenin/http-client.svg?branch=master)](https://travis-ci.org/zelenin/http-client) [![Coverage Status](https://coveralls.io/repos/github/zelenin/http-client/badge.svg?branch=master)](https://coveralls.io/github/zelenin/http-client?branch=master)
 
-[PSR-18](http://www.php-fig.org/psr/psr-18/) compatible HTTP client with middleware support.
+[PSR-18](http://www.php-fig.org/psr/psr-18/) compatible low-level HTTP client with middleware support.
 
 ## Installation
 
@@ -47,17 +47,22 @@ use Zelenin\HttpClient\MiddlewareClient;
 use Zelenin\HttpClient\RequestConfig;
 use Zelenin\HttpClient\Transport\CurlTransport;
 use Zend\Diactoros\Request;
+use Zend\Diactoros\ResponseFactory;
+use Zend\Diactoros\StreamFactory;
 use Zend\Diactoros\Uri;
+
+$streamFactory = new StreamFactory();
+$responseFactory = new ResponseFactory();
 
 $cookieStorage = new FileStorage('/tmp/http-client/cookies.storage');
 
 $client = new MiddlewareClient([
     new CookieRequest($cookieStorage),
     new UserAgent(sprintf('HttpClient PHP/%s', PHP_VERSION)),
-    new Deflate(),
+    new Deflate($streamFactory),
     new CookieResponse($cookieStorage),
-    new CurlTransport(new RequestConfig()),
-]);
+    new CurlTransport($streamFactory, $responseFactory, new RequestConfig()),
+], $responseFactory);
 
 $request = new Request(new Uri('https://example.com/'), 'GET');
 $response = $client->sendRequest($request);

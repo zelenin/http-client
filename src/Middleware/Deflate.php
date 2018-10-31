@@ -5,12 +5,26 @@ namespace Zelenin\HttpClient\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Zelenin\HttpClient\MiddlewareInterface;
 use Zelenin\HttpClient\RequestHandlerInterface;
 use function Zelenin\HttpClient\inflateStream;
 
 final class Deflate implements MiddlewareInterface
 {
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $streamFactory;
+
+    /**
+     * @param StreamFactoryInterface $streamFactory
+     */
+    public function __construct(StreamFactoryInterface $streamFactory)
+    {
+        $this->streamFactory = $streamFactory;
+    }
+
     /**
      * @inheritdoc
      */
@@ -21,7 +35,7 @@ final class Deflate implements MiddlewareInterface
         if ($response->hasHeader('Content-Encoding')) {
             $encoding = $response->getHeader('Content-Encoding');
             if ($encoding[0] === 'gzip' || $encoding[0] === 'deflate') {
-                $stream = inflateStream($response->getBody());
+                $stream = inflateStream($response->getBody(), $this->streamFactory);
 
                 $response = $response
                     ->withBody($stream)

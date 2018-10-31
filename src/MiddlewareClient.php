@@ -5,6 +5,7 @@ namespace Zelenin\HttpClient;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 final class MiddlewareClient implements ClientInterface
@@ -15,13 +16,20 @@ final class MiddlewareClient implements ClientInterface
     private $middlewares;
 
     /**
-     * @param array|MiddlewareInterface[] $middlewares
+     * @var ResponseFactoryInterface
      */
-    public function __construct(array $middlewares)
+    private $responseFactory;
+
+    /**
+     * @param array|MiddlewareInterface[] $middlewares
+     * @param ResponseFactoryInterface $responseFactory
+     */
+    public function __construct(array $middlewares, ResponseFactoryInterface $responseFactory)
     {
         $this->middlewares = array_map(function (MiddlewareInterface $middleware) {
             return $middleware;
         }, $middlewares);
+        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -29,7 +37,7 @@ final class MiddlewareClient implements ClientInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $requestHandler = new RequestHandler($this->middlewares, new FallbackMiddleware());
+        $requestHandler = new RequestHandler($this->middlewares, new FallbackMiddleware($this->responseFactory));
 
         return $requestHandler->handle($request);
     }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Zelenin\HttpClient\Exception;
 
 use Exception;
+use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use RuntimeException;
 
-class RequestException extends RuntimeException implements \Psr\Http\Client\Exception\RequestException
+class RequestException extends RuntimeException implements RequestExceptionInterface
 {
     /**
      * @var RequestInterface
