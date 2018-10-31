@@ -27,7 +27,7 @@ final class MiddlewareClientTest extends TestCase
         $response = $client->sendRequest($request);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['text/html'], $response->getHeader('Content-type'));
+        $this->assertEquals(['text/html; charset=UTF-8'], $response->getHeader('Content-type'));
         $this->assertContains('Example Domain', $response->getBody()->getContents());
     }
 }
